@@ -1,0 +1,17 @@
+* -text
+
+/.github export-ignore
+/docker export-ignore
+/tests export-ignore
+/.dockerignore export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/.php-cs-fixer.dist.php export-ignore
+/.php-cs-fixer.tests.php export-ignore
+/AGENTS.md export-ignore
+/CODE_OF_CONDUCT.md export-ignore
+/CONTRIBUTING.md export-ignore
+/docker-compose.yml export-ignore
+/infection.json5 export-ignore
+/phpstan.neon.dist export-ignore
+/phpunit.xml.dist export-ignore

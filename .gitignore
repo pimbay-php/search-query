@@ -1,0 +1,9 @@
+/.idea/
+/.settings/
+
+/composer.lock
+/var/
+/vendor/
+
+*.local
+!/**/.gitkeep

@@ -1,0 +1,30 @@
+services:
+  php83:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        PHP_VERSION: 8.3
+    working_dir: /app
+    volumes:
+      - .:/app
+
+  php84:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        PHP_VERSION: 8.4
+    working_dir: /app
+    volumes:
+      - .:/app
+
+  php85:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        PHP_VERSION: 8.5
+    working_dir: /app
+    volumes:
+      - .:/app

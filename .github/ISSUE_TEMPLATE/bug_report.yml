@@ -1,0 +1,41 @@
+name: Bug report
+description: Something in pimbay-php/search-query isn't working as documented
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you expected instead, and what actually happened.
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: A minimal PHP snippet that reproduces it.
+      render: php
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Package version / commit
+    validations:
+      required: true
+
+  - type: input
+    id: php-version
+    attributes:
+      label: PHP version
+    validations:
+      required: true
+
+  - type: textarea
+    id: output
+    attributes:
+      label: Relevant output
+      description: Exception message/stack trace, if any. Redact anything sensitive.
+      render: shell

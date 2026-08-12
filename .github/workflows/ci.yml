@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main, contrib]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: PHP ${{ matrix.php-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: ['8.3', '8.4', '8.5']
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: xdebug
+
+      - run: composer install --prefer-dist --no-progress
+
+      - name: Code style check
+        if: matrix.php-version == '8.3'
+        run: composer php:cs
+
+      - name: Static analysis
+        run: composer php:stan
+
+      - name: Tests
+        if: matrix.php-version != '8.3'
+        run: vendor/bin/phpunit --no-coverage
+
+      - name: Tests with coverage
+        if: matrix.php-version == '8.3'
+        run: XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-clover=var/tests/coverage.xml -d --min-coverage=100
+
+      - name: Mutation testing
+        if: matrix.php-version == '8.3'
+        run: XDEBUG_MODE=coverage vendor/bin/infection --threads=max --min-msi=100 --min-covered-msi=100

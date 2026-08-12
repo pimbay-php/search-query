@@ -1,0 +1,84 @@
+{
+  "name": "pimbay/search-query",
+  "type": "library",
+  "description": "Framework-agnostic, strict search/pagination contracts (page, slice, cursor) with no runtime magic — a foundation for datasource-specific extensions (Doctrine, Eloquent, Elasticsearch, ...).",
+  "keywords": [
+    "search",
+    "pagination",
+    "query",
+    "cursor-pagination",
+    "framework-agnostic"
+  ],
+  "license": "Unlicense",
+  "authors": [
+    {
+      "name": "Jan Sarmir",
+      "email": "sarmir@pimbay.dev",
+      "homepage": "https://pimbay.dev",
+      "role": "Creator"
+    }
+  ],
+  "homepage": "https://pimbay.dev",
+  "support": {
+    "source": "https://codeberg.org/pimbay-php/search-query",
+    "issues": "https://codeberg.org/pimbay-php/search-query/issues",
+    "docs": "https://pimbay.dev",
+    "readme": "README.md"
+  },
+  "require": {
+    "php": ">=8.3"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.95",
+    "infection/infection": "^0.34.2",
+    "phpstan/phpstan": "^2.0",
+    "phpunit/phpunit": "^11.0",
+    "robiningelbrecht/phpunit-coverage-tools": "^1.10"
+  },
+  "autoload": {
+    "psr-4": {
+      "PimBay\\SearchQuery\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "PimBay\\SearchQuery\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "infection/extension-installer": true
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "scripts": {
+    "docker:build": "docker compose build",
+    "php:cs": [
+      "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run --diff",
+      "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.tests.php --dry-run --diff"
+    ],
+    "php:cs:fix": [
+      "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php",
+      "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.tests.php"
+    ],
+    "php:stan": "vendor/bin/phpstan analyse",
+    "test:coverage": "docker compose run --rm php83 sh -c 'composer install --prefer-dist --no-progress && XDEBUG_MODE=coverage php vendor/bin/phpunit --coverage-text --coverage-clover=var/tests/coverage.xml -d --min-coverage=100'",
+    "test:mutation": "docker compose run --rm php83 sh -c 'composer install --prefer-dist --no-progress && XDEBUG_MODE=coverage vendor/bin/infection --threads=max --min-msi=100 --min-covered-msi=100'",
+    "test:83": "docker compose run --rm php83 sh -c 'composer install --prefer-dist --no-progress && php vendor/bin/phpunit --no-coverage'",
+    "test:84": "docker compose run --rm php84 sh -c 'composer install --prefer-dist --no-progress && php vendor/bin/phpunit --no-coverage'",
+    "test:85": "docker compose run --rm php85 sh -c 'composer install --prefer-dist --no-progress && php vendor/bin/phpunit --no-coverage'",
+    "test:all": [
+      "@test:83",
+      "@test:84",
+      "@test:85"
+    ],
+    "ci": [
+      "@php:cs",
+      "@php:stan",
+      "@test:all",
+      "@test:mutation"
+    ]
+  }
+}
