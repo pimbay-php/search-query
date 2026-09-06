@@ -55,3 +55,13 @@ A consuming repository picks exactly the family it needs per method and the type
 **Why:** The library previously clamped (`min($page, $pagesCount)`), which meant a request for an out-of-range page silently returned the same content as the last valid page. For an HTML listing crawled by search engines, this produces duplicate-content pages at every URL beyond the real range — exactly the kind of issue tools like Google Search Console flag. The library itself does not throw or decide an HTTP status for this; that is the consuming controller's policy decision (404 for an SEO-sensitive HTML listing, a plain empty `200` for a JSON API that doesn't care).
 
 **Alternatives considered:** Throwing an exception directly from `PageAssembler` for an out-of-range page (rejected — would force every consumer, including ones that are fine with an empty result, into a `try`/`catch`).
+
+## Negated search terms combine with AND (exclude on any match), not OR
+
+**Date:** 2026-09-06
+
+**Decision:** A datasource-specific package must combine negated terms (`ParsedSearchTerms::notEquals`/`notLikes`) with `AND` — a record is excluded if it matches *any one* of them, not only if it matches *all*. `-dog -cat` excludes anything mentioning either. `SearchTermsParser` only buckets terms; it never builds the query, so this is guidance for consumer packages, not enforced here.
+
+**Why:** Matches how a search box reads in natural language — several exclusions mean "hide all of these", not "only hide the overlap". Requiring every negated term to co-occur before excluding a record would almost never fire in free-text search.
+
+**Alternatives considered:** Combining negated terms with `OR` inside the query (rejected — counter-intuitive, rarely useful).
