@@ -18,17 +18,17 @@ namespace PimBay\SearchQuery\Cursor;
  *
  * @implements CursorResult<T>
  */
-final class Cursor implements CursorResult
+final readonly class Cursor implements CursorResult
 {
     /**
      * @param iterable<array-key, T> $data
      */
     public function __construct(
-        private readonly iterable $data,
-        private readonly int $currentCount,
-        private readonly int $pageSize,
-        private readonly ?string $nextCursor,
-        private readonly bool $hasNextPage,
+        private iterable $data,
+        private int $currentCount,
+        private int $pageSize,
+        private ?string $nextCursor,
+        private bool $hasNextPage,
     ) {
     }
 
