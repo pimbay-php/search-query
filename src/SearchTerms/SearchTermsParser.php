@@ -43,6 +43,11 @@ final class SearchTermsParser
 
             $negated = str_starts_with($value, $config->ignoreChar);
             $body = $negated ? substr($value, \strlen($config->ignoreChar)) : $value;
+
+            if ('' === $body) {
+                continue;
+            }
+
             $isLike = str_contains($body, $config->likeChar);
 
             if ($negated && $isLike) {
@@ -64,8 +69,6 @@ final class SearchTermsParser
      */
     private function splitAndTrim(string $text): array
     {
-        $terms = preg_split('/\s+/', $text);
-
-        return array_filter($terms ?: [], static fn (string $term): bool => '' !== $term);
+        return preg_split('/\s+/', $text) ?: [];
     }
 }

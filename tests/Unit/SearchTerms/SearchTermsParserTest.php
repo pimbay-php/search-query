@@ -34,6 +34,24 @@ final class SearchTermsParserTest extends TestCase
     }
 
     /**
+     * @return iterable<string, array{string[]}>
+     */
+    public static function degenerateTermProvider(): iterable
+    {
+        yield 'bare ignoreChar' => [['-']];
+        yield 'empty string' => [['']];
+    }
+
+    /**
+     * @return iterable<string, array{string[], string[]}>
+     */
+    public static function degenerateTermFollowedByValidTermProvider(): iterable
+    {
+        yield 'bare ignoreChar then a valid term' => [['-', 'dog'], ['dog']];
+        yield 'empty string then a valid term' => [['', 'cat'], ['cat']];
+    }
+
+    /**
      * @return iterable<string, array{string}>
      */
     public static function singleTermProvider(): iterable
@@ -126,6 +144,31 @@ final class SearchTermsParserTest extends TestCase
 
         self::assertSame($expectedEquals, $result->equals);
         self::assertSame($expectedNotEquals, $result->notEquals);
+    }
+
+    /**
+     * @param string[] $terms
+     */
+    #[Test]
+    #[DataProvider('degenerateTermProvider')]
+    public function termsThatAreEmptyAfterMarkerStrippingAreIgnored(array $terms): void
+    {
+        $result = (new SearchTermsParser())->parse($terms, new SearchTermsConfig(minLength: 0));
+
+        self::assertTrue($result->isEmpty());
+    }
+
+    /**
+     * @param string[] $terms
+     * @param string[] $expectedEquals
+     */
+    #[Test]
+    #[DataProvider('degenerateTermFollowedByValidTermProvider')]
+    public function degenerateTermDoesNotStopProcessingOfLaterTerms(array $terms, array $expectedEquals): void
+    {
+        $result = (new SearchTermsParser())->parse($terms, new SearchTermsConfig(minLength: 0));
+
+        self::assertSame($expectedEquals, $result->equals);
     }
 
     #[Test]
