@@ -21,7 +21,7 @@
   "homepage": "https://pimbay.dev",
   "support": {
     "source": "https://codeberg.org/pimbay-php/search-query",
-    "issues": "https://codeberg.org/pimbay-php/search-query/issues",
+    "issues": "https://github.com/pimbay-php/search-query/issues",
     "docs": "https://pimbay.dev",
     "readme": "README.md"
   },
@@ -54,7 +54,6 @@
   "minimum-stability": "stable",
   "prefer-stable": true,
   "scripts": {
-    "docker:build": "docker compose build",
     "php:cs": [
       "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run --diff",
       "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.tests.php --dry-run --diff"
