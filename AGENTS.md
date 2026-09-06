@@ -21,7 +21,6 @@ composer test:85        # docker compose run php85 — phpunit, no coverage
 composer test:all       # test:83 + test:84 + test:85
 composer test:coverage  # docker compose run php83 — phpunit --coverage-text
 composer test:mutation # infection — mutation testing, --min-msi=100 --min-covered-msi=100
-composer docker:build   # docker compose build
 composer ci             # php:cs + php:stan + test:all + test:mutation
 ```
 

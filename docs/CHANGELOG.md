@@ -5,6 +5,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); version
 
 ## [Unreleased]
 
+### Removed
+- The `composer docker:build` script.
+
 ## [1.0.0] - 2026-08-15
 
 ### Added

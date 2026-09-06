@@ -1,9 +1,10 @@
 name: CI
 
 on:
-  push:
-    branches: [main, contrib]
   pull_request:
+    branches: [contrib]
+  push:
+    branches: [contrib]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -45,3 +46,18 @@ jobs:
       - name: Mutation testing
         if: matrix.php-version == '8.3'
         run: XDEBUG_MODE=coverage vendor/bin/infection --threads=max --min-msi=100 --min-covered-msi=100
+
+  sync:
+    if: github.event_name == 'push'
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push contrib to Codeberg
+        run: |
+          git remote add codeberg https://oauth2:${{ secrets.CODEBERG_TOKEN }}@codeberg.org/pimbay-php/search-query.git
+          git fetch codeberg contrib:refs/remotes/codeberg/contrib || true
+          git push codeberg HEAD:contrib --force
