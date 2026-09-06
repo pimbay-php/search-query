@@ -22,7 +22,7 @@ use PimBay\SearchQuery\Slice\Slice;
  *
  * @implements PageResult<T>
  */
-final class Page extends Slice implements PageResult
+final readonly class Page extends Slice implements PageResult
 {
     /**
      * @param iterable<array-key, T> $data
@@ -34,8 +34,8 @@ final class Page extends Slice implements PageResult
         int $pageSize,
         bool $hasNextPage,
         bool $hasPreviousPage,
-        private readonly int $pageCount,
-        private readonly int $totalCount,
+        private int $pageCount,
+        private int $totalCount,
     ) {
         parent::__construct($data, $currentCount, $currentPage, $pageSize, $hasNextPage, $hasPreviousPage);
     }

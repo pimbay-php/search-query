@@ -18,18 +18,18 @@ namespace PimBay\SearchQuery\Slice;
  *
  * @implements SliceResult<T>
  */
-class Slice implements SliceResult
+readonly class Slice implements SliceResult
 {
     /**
      * @param iterable<array-key, T> $data
      */
     public function __construct(
-        private readonly iterable $data,
-        private readonly int $currentCount,
-        private readonly int $currentPage,
-        private readonly int $pageSize,
-        private readonly bool $hasNextPage,
-        private readonly bool $hasPreviousPage,
+        private iterable $data,
+        private int $currentCount,
+        private int $currentPage,
+        private int $pageSize,
+        private bool $hasNextPage,
+        private bool $hasPreviousPage,
     ) {
     }
 

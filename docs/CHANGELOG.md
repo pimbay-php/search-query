@@ -11,6 +11,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); version
 ### Fixed
 - `SearchTermsParser` no longer produces an empty-string term when a search term becomes empty after stripping the negation marker (e.g. a term consisting solely of the marker) with `minLength: 0`.
 
+### Changed
+- `Cursor`, `Page`, and `Slice` are now declared as `readonly` classes rather than only having `readonly` properties.
+
 ## [1.0.0] - 2026-08-15
 
 ### Added
