@@ -7,15 +7,16 @@
 
 ## Current focus
 
-Core `src/` is complete and internally consistent for the three pagination families (`Page`, `Slice`, `Cursor`) plus capability adapters.
+Nothing in progress right now.
 
 ## Open questions
+
+None currently open.
 
 ## Known limitations / non-goals (for now)
 
 - No generic filter/sort DSL (`Criterion`/`SortRule`) — deliberate, see `docs/DECISIONS.md`.
 - No bidirectional cursor (`previousCursor`) — `Cursor` is forward-only; addable additively later if needed.
-- No datasource adapters ship in this package — Doctrine/Eloquent/Elasticsearch/Pimcore implementations are separate, not-yet-built packages that depend on this one.
 
 ## Implementation notes
 
