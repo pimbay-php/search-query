@@ -223,7 +223,7 @@ composer php:stan      # phpstan analyse, level: max
 | Package | Description |
 |---|---|
 | `pimbay/search-query` | This package — framework-agnostic contracts, no datasource code. |
-| `pimbay/search-query-doctrine` | *(planned)* `PageAdapter`/`SliceAdapter`/`CountableAdapter`/`IdentifiableAdapter`/`HeadableAdapter`/`AllAdapter` over Doctrine DBAL/ORM. |
+| `pimbay/search-query-doctrine` | `PageAdapter`/`SliceAdapter`/`CountableAdapter`/`IdentifiableAdapter`/`HeadableAdapter`/`AllAdapter` over Doctrine DBAL/ORM. |
 | `pimbay/search-query-pimcore` | *(planned)* Terminal implementation over Pimcore `DataObject\Listing`. |
 
 ## Architecture & Decisions

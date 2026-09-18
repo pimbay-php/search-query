@@ -41,7 +41,7 @@ jobs:
 
       - name: Tests with coverage
         if: matrix.php-version == '8.3'
-        run: XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-clover=var/tests/coverage.xml -d --min-coverage=100
+        run: XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-clover=var/reports/coverage/report.xml -d --min-coverage=100
 
       - name: Mutation testing
         if: matrix.php-version == '8.3'
