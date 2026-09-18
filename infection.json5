@@ -8,6 +8,6 @@
   "minMsi": 100,
   "minCoveredMsi": 100,
   "logs": {
-    "text": "var/tests/infection.log"
+    "text": "var/reports/mutation/report.log"
   }
 }

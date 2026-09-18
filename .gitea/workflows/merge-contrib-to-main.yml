@@ -25,23 +25,16 @@ jobs:
           git merge --no-ff origin/contrib -m "chore: merge contrib into main"
           git push origin main
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-
-      - name: Tag release if version manifest carries an untagged version
+      - name: Tag release if VERSION carries an untagged version
         run: |
-          if [ -f package.json ]; then
-            VERSION="$(node -p "require('./package.json').version")"
-          elif [ -f VERSION ]; then
-            VERSION="$(cat VERSION)"
-          else
-            echo "no version manifest found (package.json or VERSION) — skipping tag" >&2
+          if [ ! -f VERSION ]; then
+            echo "no VERSION file — skipping tag" >&2
             exit 0
           fi
+          VERSION="$(cat VERSION | tr -d '[:space:]')"
 
-          if [ -z "$VERSION" ]; then
-            echo "could not read version from manifest — skipping tag" >&2
+          if [ -z "$VERSION" ] || [ "$VERSION" = "0.0.0" ]; then
+            echo "no releasable version (missing, or 0.0.0 placeholder) — skipping tag" >&2
             exit 0
           fi
           TAG="v${VERSION}"
