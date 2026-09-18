@@ -7,7 +7,7 @@ This file holds the one example that doesn't fit there: the intended shape of a 
 
 Filtering/sorting stays entirely in your own `Query` class and repository methods; the library never sees either.
 `Sort` (a bare `ASC`/`DESC` enum) and any `EnumValues`-style helper for serializing backed enums are your own project's concern too — not exported by this library, since it never inspects or acts on them.
-`OrmSimpleAdapter` below ships in the (not yet published) `search-query-doctrine` package, which implements `PageAdapter`/`SliceAdapter`/`CountableAdapter`/`IdentifiableAdapter`/`HeadableAdapter`/`AllAdapter` over a Doctrine `QueryBuilder`.
+`OrmSimpleAdapter` below ships in the `search-query-doctrine` package, which implements `PageAdapter`/`SliceAdapter`/`CountableAdapter`/`IdentifiableAdapter`/`HeadableAdapter`/`AllAdapter` over a Doctrine `QueryBuilder`.
 
 ```php
 <?php
