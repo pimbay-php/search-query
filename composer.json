@@ -63,8 +63,6 @@
       "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.tests.php"
     ],
     "php:stan": "vendor/bin/phpstan analyse",
-    "test:coverage": "docker compose run --rm php83 sh -c 'composer install --prefer-dist --no-progress && XDEBUG_MODE=coverage php vendor/bin/phpunit --coverage-text --coverage-clover=var/tests/coverage.xml -d --min-coverage=100'",
-    "test:mutation": "docker compose run --rm php83 sh -c 'composer install --prefer-dist --no-progress && XDEBUG_MODE=coverage vendor/bin/infection --threads=max --min-msi=100 --min-covered-msi=100'",
     "test:83": "docker compose run --rm php83 sh -c 'composer install --prefer-dist --no-progress && php vendor/bin/phpunit --no-coverage'",
     "test:84": "docker compose run --rm php84 sh -c 'composer install --prefer-dist --no-progress && php vendor/bin/phpunit --no-coverage'",
     "test:85": "docker compose run --rm php85 sh -c 'composer install --prefer-dist --no-progress && php vendor/bin/phpunit --no-coverage'",
@@ -73,6 +71,8 @@
       "@test:84",
       "@test:85"
     ],
+    "test:coverage": "docker compose run --rm php83 sh -c 'composer install --prefer-dist --no-progress && XDEBUG_MODE=coverage php vendor/bin/phpunit --coverage-text --coverage-clover=var/reports/coverage/report.xml -d --min-coverage=100'",
+    "test:mutation": "docker compose run --rm php83 sh -c 'composer install --prefer-dist --no-progress && XDEBUG_MODE=coverage vendor/bin/infection --threads=max --min-msi=100 --min-covered-msi=100'",
     "ci": [
       "@php:cs",
       "@php:stan",

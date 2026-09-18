@@ -26,7 +26,7 @@
         </include>
     </source>
     <logging>
-        <junit outputFile="var/tests/report.xml"/>
+        <junit outputFile="var/reports/tests/report.xml"/>
     </logging>
     <coverage includeUncoveredFiles="true"
               pathCoverage="false"
