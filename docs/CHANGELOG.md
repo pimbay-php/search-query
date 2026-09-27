@@ -5,6 +5,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); version
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-09-27
+
 ### Added
 - `SearchTermsConfig` accepts several negation markers and several wildcard markers at once, every one of them an alias for the same behaviour; `!` negates a term alongside `-` out of the box.
 - Either marker set may be left empty, which turns that marker class off entirely — the way to search data that legitimately starts with `-` or `!`, or contains `*`.
