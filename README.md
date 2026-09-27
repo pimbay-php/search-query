@@ -144,6 +144,7 @@ $parsed->notEquals; // ['cow']
 | `minLength` | `3` | Measured on the raw term, so a negation marker counts towards it: `-ab` needs `minLength <= 3`. |
 | `likeMarkers` | `['*']` | Markers a term may embed to become a wildcard match; every one of them maps to the same wildcard. `[]` disables wildcards. |
 | `ignoreMarkers` | `['-', '!']` | Markers a term may start with to become a negation. Longest first wins, so `--` beats `-`. `[]` disables negation, which is what data with legitimately leading `-`/`!` needs. |
+| `ignoredTermsMatchNull` | `true` | Pass-through hint only, like `anywhere`. Whether a negated term should also keep records whose value is absent: `-red` means "not red", and under SQL's three-valued logic a bare `value != 'red'` drops every `NULL` row silently. `false` restores that stricter reading. |
 
 Negated terms are grouped as AND — `-dog -cat` excludes any record mentioning either, not only records mentioning both (see `docs/DECISIONS.md` for the reasoning).
 
