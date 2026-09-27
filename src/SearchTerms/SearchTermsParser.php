@@ -14,10 +14,8 @@ declare(strict_types=1);
 namespace PimBay\SearchQuery\SearchTerms;
 
 /**
- * Splits raw user-provided search terms into equals/notEquals/likes/notLikes buckets
- * based on a leading negation marker and an embedded wildcard marker.
- * Pure string parsing — no SQL, no column/field mapping, no datasource awareness.
- * Datasource-specific packages turn a ParsedSearchTerms into actual query conditions against a concrete column.
+ * Pure string parsing — no SQL, no column/field mapping, no datasource awareness. Datasource-specific
+ * packages turn a ParsedSearchTerms into query conditions against a concrete column.
  */
 final class SearchTermsParser
 {
@@ -41,14 +39,22 @@ final class SearchTermsParser
                 continue;
             }
 
-            $negated = str_starts_with($value, $config->ignoreChar);
-            $body = $negated ? substr($value, \strlen($config->ignoreChar)) : $value;
+            $body = $value;
+            $negated = false;
+
+            foreach ($config->ignoreMarkers as $marker) {
+                if (str_starts_with($value, $marker)) {
+                    $body = substr($value, \strlen($marker));
+                    $negated = true;
+                    break;
+                }
+            }
 
             if ('' === $body) {
                 continue;
             }
 
-            $isLike = str_contains($body, $config->likeChar);
+            $isLike = $this->containsAnyMarker($body, $config->likeMarkers);
 
             if ($negated && $isLike) {
                 $notLikes[] = $body;
@@ -62,6 +68,20 @@ final class SearchTermsParser
         }
 
         return new ParsedSearchTerms($equals, $notEquals, $likes, $notLikes);
+    }
+
+    /**
+     * @param list<string> $markers
+     */
+    private function containsAnyMarker(string $body, array $markers): bool
+    {
+        foreach ($markers as $marker) {
+            if (str_contains($body, $marker)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

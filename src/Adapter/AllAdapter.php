@@ -14,10 +14,8 @@ declare(strict_types=1);
 namespace PimBay\SearchQuery\Adapter;
 
 /**
- * Unbounded read of an entire result set. Deliberately a separate interface
- * from HeadableAdapter — implementing HeadableAdapter must never implicitly
- * grant unbounded reads; a caller/adapter opts into this capability
- * explicitly.
+ * Separate from HeadableAdapter on purpose — implementing a bounded read must never implicitly
+ * grant unbounded ones, so this capability is opted into explicitly.
  *
  * @template-covariant T
  */

@@ -65,3 +65,19 @@ A consuming repository picks exactly the family it needs per method and the type
 **Why:** Matches how a search box reads in natural language — several exclusions mean "hide all of these", not "only hide the overlap". Requiring every negated term to co-occur before excluding a record would almost never fire in free-text search.
 
 **Alternatives considered:** Combining negated terms with `OR` inside the query (rejected — counter-intuitive, rarely useful).
+
+## `likeChar`/`ignoreChar` became `likeMarkers`/`ignoreMarkers` arrays, and `-`/`!` both negate by default
+
+**Date:** 2026-09-27
+
+**Decision:** `SearchTermsConfig` takes `array $likeMarkers = ['*']` and `array $ignoreMarkers = ['-', '!']` in place of the single-string `likeChar`/`ignoreChar`. The names say `Markers`, not `Chars`, because an element is a string of any length, not a single character — which the old names already misrepresented. Every element of `likeMarkers` is an alias for the same wildcard; every element of `ignoreMarkers` is an alias for negation. Both may be `[]`, which disables that marker class entirely. Markers are normalized longest-first, and elements must be non-empty, unique, and not shared between the two sets.
+
+**Why:** `-` is the negation convention users bring from web search, `!` the one they bring from Lucene, Elasticsearch `query_string` and Pimcore's own `pimcore/search-query-parser` (whose lexer maps `!` to `T_NEGATION`). Supporting one meant the other silently searched for a literal. A caller could already switch the marker, but not accept both.
+
+`[]` is allowed because every marker removes a literal from the searchable space, and the parser has no quoting syntax to get it back: with negation on, a term can never begin with `-` or `!`, so data like `-5 rabat` or `!important` needs a way to turn negation off. The same holds for `likeMarkers`.
+
+Longest-first normalization matters when one marker is a prefix of another (`-` alongside `--`): without it, which one matched would depend on the order the caller happened to pass them in.
+
+**Consequence:** breaking change for anyone naming `likeChar:`/`ignoreChar:`. Nothing outside `SearchTermsParser` reads either property, so the adapter packages need no code change for this — only for the escaping order, recorded separately in each of them.
+
+**Alternatives considered:** Keeping single strings and adding quoting (`"-5"`) so a leading marker could be escaped. Rejected for now — `SearchTermsParser::splitAndTrim()` splits on whitespace only, so quoting is a parser feature of its own, not a config tweak. `[]` covers the same need for the field-level case this library actually serves.
