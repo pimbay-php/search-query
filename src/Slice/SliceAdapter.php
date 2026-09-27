@@ -19,9 +19,8 @@ namespace PimBay\SearchQuery\Slice;
 interface SliceAdapter
 {
     /**
-     * Implementations are expected to determine `hasMore` cheaply (e.g. by
-     * fetching `size + 1` rows and dropping the extra one), not via a separate
-     * count query — that's the entire point of the Slice family over Page.
+     * `hasMore` must be determined cheaply (fetch `size + 1` rows, drop the extra one), never via a
+     * separate count query — that is the entire point of the Slice family over Page.
      *
      * @return SliceChunk<T>
      */

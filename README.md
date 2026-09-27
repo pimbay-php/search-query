@@ -136,7 +136,15 @@ $parsed->likes;     // ['hors*']
 $parsed->notEquals; // ['cow']
 ```
 
-`SearchTermsConfig` is tunable (`anywhere`, `minLength`, `likeChar`, `ignoreChar`) and validates its own markers (non-empty, mutually distinct) via `SearchQueryException`.
+`SearchTermsConfig` validates its own markers (non-empty, unique, the two sets disjoint) via `SearchQueryException`.
+
+| Parameter | Default | Notes |
+|:----------|:--------|:------|
+| `anywhere` | `true` | Pass-through hint only — this package never reads it; a datasource package decides what it means for its own `LIKE` pattern. |
+| `minLength` | `3` | Measured on the raw term, so a negation marker counts towards it: `-ab` needs `minLength <= 3`. |
+| `likeMarkers` | `['*']` | Markers a term may embed to become a wildcard match; every one of them maps to the same wildcard. `[]` disables wildcards. |
+| `ignoreMarkers` | `['-', '!']` | Markers a term may start with to become a negation. Longest first wins, so `--` beats `-`. `[]` disables negation, which is what data with legitimately leading `-`/`!` needs. |
+
 Negated terms are grouped as AND — `-dog -cat` excludes any record mentioning either, not only records mentioning both (see `docs/DECISIONS.md` for the reasoning).
 
 ### `Adapter\InMemoryArrayAdapter`
@@ -190,7 +198,7 @@ try {
 | `InvalidPageException` | `PageAssembler`/`SliceAssembler::paginate()` — `$page` less than 1 |
 | `InvalidSizeException` | `PageAssembler`/`SliceAssembler`/`CursorAssembler::paginate()` — `$size` less than 1 |
 | `EmptyCursorException` | `CursorAssembler::paginate()` — `$cursor` (or an adapter's returned `nextCursor`) is an empty string (use `null`, not `''`, for "no cursor") |
-| `InvalidSearchTermsConfigException` | `SearchTermsConfig` constructor — an invalid combination of `likeChar`/`ignoreChar`/`minLength` |
+| `InvalidSearchTermsConfigException` | `SearchTermsConfig` constructor — an invalid combination of `likeMarkers`/`ignoreMarkers`/`minLength` |
 | `OutOfRangeException` | `PageAssembler`/`SliceAssembler::paginateOrThrow()` — the requested page is past the last valid one |
 
 ## Testing
@@ -218,19 +226,19 @@ composer php:cs:fix    # same, applies the fix
 composer php:stan      # phpstan analyse, level: max
 ```
 
-## Packages in the stack
-
-| Package | Description |
-|---|---|
-| `pimbay/search-query` | This package — framework-agnostic contracts, no datasource code. |
-| `pimbay/search-query-doctrine` | `PageAdapter`/`SliceAdapter`/`CountableAdapter`/`IdentifiableAdapter`/`HeadableAdapter`/`AllAdapter` over Doctrine DBAL/ORM. |
-| `pimbay/search-query-pimcore` | *(planned)* Terminal implementation over Pimcore `DataObject\Listing`. |
-
 ## Architecture & Decisions
 
 - **[docs/context.md](docs/context.md)** — current working state: what's in progress, what's next.
 - **[docs/DECISIONS.md](docs/DECISIONS.md)** — why things are built the way they are, in the order the decisions were made.
 - **[docs/CHANGELOG.md](docs/CHANGELOG.md)** — version history.
+
+## Packages in the stack
+
+| Package | Description |
+|---|---|
+| `pimbay/search-query` | This package — framework-agnostic contracts, no datasource code. |
+| `pimbay/search-query-doctrine` | Adapters over a Doctrine DBAL or ORM QueryBuilder. |
+| `pimbay/search-query-pimcore` | Adapters over a Pimcore listing. |
 
 ## License
 
