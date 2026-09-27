@@ -121,6 +121,7 @@ final class SearchTermsParserTest extends TestCase
         self::assertSame(3, $config->minLength);
         self::assertSame(['*'], $config->likeMarkers);
         self::assertSame(['-', '!'], $config->ignoreMarkers);
+        self::assertTrue($config->ignoredTermsMatchNull);
     }
 
     #[Test]

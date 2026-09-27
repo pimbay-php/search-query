@@ -5,6 +5,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); version
 
 ## [Unreleased]
 
+### Added
+- `SearchTermsConfig::$ignoredTermsMatchNull` (default `true`) — a pass-through hint, like `anywhere`, telling a datasource package whether a negated term should also keep records with no value. It exists because `value != 'red'` drops every `NULL` row under SQL's three-valued logic, so `-red` silently excluded records that had nothing to compare; the adapters read this flag to decide. The default is the reading a person typing `-red` expects, so behaviour changes for adapters that adopt it.
+
 ## [2.0.0] - 2026-09-27
 
 ### Added

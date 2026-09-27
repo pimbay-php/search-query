@@ -32,6 +32,7 @@ final readonly class SearchTermsConfig
         public int $minLength = 3,
         array $likeMarkers = ['*'],
         array $ignoreMarkers = ['-', '!'],
+        public bool $ignoredTermsMatchNull = true,
     ) {
         $this->likeMarkers = self::normalize($likeMarkers, 'likeMarkers');
         $this->ignoreMarkers = self::normalize($ignoreMarkers, 'ignoreMarkers');
