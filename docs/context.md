@@ -24,7 +24,5 @@ None currently open.
 
 ## Ideas / future plans
 
-- `search-query-doctrine` (DBAL + ORM `DbalSimpleAdapter`, `Slice`/`Cursor` variants).
-- `search-query-pimcore` (terminal implementation over Pimcore `DataObject\Listing`).
 - `search-query-elastic` — will likely need its own `CursorAdapter`-only contract given Elasticsearch's `index.max_result_window` limit; no `Page` support past that limit.
 - `Cursor\CursorAssembler`'s `?string $cursor`/`nextCursor` currently carries a single opaque string, sufficient for a single-column sort key. If a future adapter needs a composite/multi-column keyset (or richer state than a plain filter position — e.g. a consistency snapshot marker), reconsider whether the cursor needs structured encoding (e.g. a dedicated value object again), informed by Rekapager's `KeysetPageIdentifier` + separate `PageIdentifierEncoderInterface` split (not adopted now — no concrete use case yet, and it would add an abstraction layer this library otherwise avoids).

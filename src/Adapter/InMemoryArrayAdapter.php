@@ -100,8 +100,8 @@ final readonly class InMemoryArrayAdapter implements PageAdapter, SliceAdapter, 
         if (null !== $cursor) {
             $keys = array_map(strval(...), array_keys($this->items));
             $position = array_search($cursor, $keys, true);
-            // Stale/unknown cursor (can't happen within one instance's lifetime,
-            // since $items never changes) — restart from the beginning rather than throw.
+            // Restart rather than throw: a stale cursor cannot occur within one instance's lifetime,
+            // since $items never changes.
             $startIndex = false === $position ? 0 : $position + 1;
         }
 

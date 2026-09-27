@@ -34,8 +34,8 @@ composer ci             # php:cs + php:stan + test:all + test:mutation
 - **`readonly` properties** by default. **Public readonly, no getter** for plain value objects.
 - **Named-constructor exceptions** — no inline `new SomeException(...)` beyond the trivial case.
 - **PSR-4**, one class per file: `PimBay\SearchQuery\<Family>\...` → `src/<Family>/...`.
-- **Comments** only where they explain a non-trivial decision or *why* — never restate *what* the code already says. Don't comment obvious lines. Keep to 1-2 lines; more only for genuinely complex logic. Always in English.
-- **Markdown**: semantic linebreaks — break at sentence end, never inside a list item.
+- **Comments** only where they explain a non-trivial decision or _why_ — never restate _what_ the code already says. Don't comment obvious lines. Keep to 1-2 lines; more only for genuinely complex logic. Always in English. Wrap at 120 columns.
+- **Markdown** (`.md` only): semantic linebreaks — break at sentence end, never inside a list item.
 - **Docs discipline**: no "Project Layout" in READMEs — the tree speaks for itself.
 - **Adapter method naming**: `*Adapter` methods named after query shape (`pageView`, `pageSlice`, `pageAfter`, `head`, `all`, `ids`, `count`) — no `get`-prefix.
 

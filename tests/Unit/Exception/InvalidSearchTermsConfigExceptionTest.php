@@ -20,8 +20,8 @@ final class InvalidSearchTermsConfigExceptionTest extends TestCase
     #[Test]
     public function messageIncludesTheGivenReason(): void
     {
-        $exception = new InvalidSearchTermsConfigException('likeChar must not be empty');
+        $exception = new InvalidSearchTermsConfigException('likeMarkers must not contain an empty marker');
 
-        self::assertSame('Invalid SearchTermsConfig: likeChar must not be empty.', $exception->getMessage());
+        self::assertSame('Invalid SearchTermsConfig: likeMarkers must not contain an empty marker.', $exception->getMessage());
     }
 }

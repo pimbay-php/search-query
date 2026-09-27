@@ -14,9 +14,8 @@ declare(strict_types=1);
 namespace PimBay\SearchQuery\Cursor;
 
 /**
- * Forward-only (no previousCursor) — add additively if bidirectional cursors
- * are needed later. No currentPage/pageCount/totalCount/currentOffset; the
- * cursor model has none of these concepts.
+ * Forward-only (no previousCursor) — add additively if bidirectional cursors are ever needed. No
+ * currentPage/pageCount/totalCount/currentOffset either; the cursor model has none of those concepts.
  *
  * @template-covariant T
  *

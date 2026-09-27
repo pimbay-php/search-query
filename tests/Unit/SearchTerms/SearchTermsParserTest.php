@@ -38,7 +38,7 @@ final class SearchTermsParserTest extends TestCase
      */
     public static function degenerateTermProvider(): iterable
     {
-        yield 'bare ignoreChar' => [['-']];
+        yield 'bare ignore marker' => [['-']];
         yield 'empty string' => [['']];
     }
 
@@ -47,7 +47,7 @@ final class SearchTermsParserTest extends TestCase
      */
     public static function degenerateTermFollowedByValidTermProvider(): iterable
     {
-        yield 'bare ignoreChar then a valid term' => [['-', 'dog'], ['dog']];
+        yield 'bare ignore marker then a valid term' => [['-', 'dog'], ['dog']];
         yield 'empty string then a valid term' => [['', 'cat'], ['cat']];
     }
 
@@ -63,14 +63,35 @@ final class SearchTermsParserTest extends TestCase
     }
 
     /**
-     * @return iterable<string, array{string, string, int}>
+     * @return iterable<string, array{string[], string[], int}>
      */
     public static function invalidConfigProvider(): iterable
     {
-        yield 'empty likeChar' => ['', '-', 3];
-        yield 'empty ignoreChar' => ['*', '', 3];
-        yield 'same likeChar and ignoreChar' => ['*', '*', 3];
-        yield 'negative minLength' => ['*', '-', -1];
+        yield 'empty likeMarkers marker' => [[''], ['-'], 3];
+        yield 'empty ignoreMarkers marker' => [['*'], [''], 3];
+        yield 'duplicate likeMarkers marker' => [['*', '*'], ['-'], 3];
+        yield 'duplicate ignoreMarkers marker' => [['*'], ['-', '-'], 3];
+        yield 'overlapping likeMarkers and ignoreMarkers' => [['*'], ['-', '*'], 3];
+        yield 'negative minLength' => [['*'], ['-'], -1];
+    }
+
+    /**
+     * @return iterable<string, array{string, string[], string[]}>
+     */
+    public static function ignoreMarkerAliasProvider(): iterable
+    {
+        yield 'dash negates' => ['-pes', [], ['pes']];
+        yield 'bang negates' => ['!pes', [], ['pes']];
+        yield 'neither marker means equals' => ['pes', ['pes'], []];
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function degenerateAliasProvider(): iterable
+    {
+        yield 'bare dash' => ['-'];
+        yield 'bare bang' => ['!'];
     }
 
     /**
@@ -98,8 +119,8 @@ final class SearchTermsParserTest extends TestCase
 
         self::assertTrue($config->anywhere);
         self::assertSame(3, $config->minLength);
-        self::assertSame('*', $config->likeChar);
-        self::assertSame('-', $config->ignoreChar);
+        self::assertSame(['*'], $config->likeMarkers);
+        self::assertSame(['-', '!'], $config->ignoreMarkers);
     }
 
     #[Test]
@@ -174,11 +195,69 @@ final class SearchTermsParserTest extends TestCase
     #[Test]
     public function multiCharacterMarkersAreSupported(): void
     {
-        $config = new SearchTermsConfig(likeChar: '%%', ignoreChar: '!!');
+        $config = new SearchTermsConfig(likeMarkers: ['%%'], ignoreMarkers: ['!!']);
 
         $result = (new SearchTermsParser())->parse(['!!pes%%'], $config);
 
         self::assertSame(['pes%%'], $result->notLikes);
+    }
+
+    /**
+     * @param string[] $expectedEquals
+     * @param string[] $expectedNotEquals
+     */
+    #[Test]
+    #[DataProvider('ignoreMarkerAliasProvider')]
+    public function everyIgnoreMarkerNegatesEqually(string $term, array $expectedEquals, array $expectedNotEquals): void
+    {
+        $result = (new SearchTermsParser())->parse([$term], new SearchTermsConfig(minLength: 0));
+
+        self::assertSame($expectedEquals, $result->equals);
+        self::assertSame($expectedNotEquals, $result->notEquals);
+    }
+
+    #[Test]
+    #[DataProvider('degenerateAliasProvider')]
+    public function aBareIgnoreMarkerIsIgnoredWhicheverAliasItIs(string $term): void
+    {
+        self::assertTrue((new SearchTermsParser())->parse([$term], new SearchTermsConfig(minLength: 0))->isEmpty());
+    }
+
+    #[Test]
+    public function anyLikeMarkerAliasTriggersALikeTerm(): void
+    {
+        $config = new SearchTermsConfig(likeMarkers: ['*', '%']);
+
+        $result = (new SearchTermsParser())->parse(['pes*', 'mac%'], $config);
+
+        self::assertSame(['pes*', 'mac%'], $result->likes);
+    }
+
+    #[Test]
+    public function markersAreNormalizedLongestFirstSoAPrefixNeverShadowsALongerOne(): void
+    {
+        $config = new SearchTermsConfig(ignoreMarkers: ['-', '--']);
+
+        self::assertSame(['--', '-'], $config->ignoreMarkers);
+        self::assertSame(['pes'], (new SearchTermsParser())->parse(['--pes'], $config)->notEquals);
+    }
+
+    #[Test]
+    public function emptyIgnoreCharsDisablesNegationSoALeadingDashStaysPartOfTheTerm(): void
+    {
+        $result = (new SearchTermsParser())->parse(['-5'], new SearchTermsConfig(minLength: 0, ignoreMarkers: []));
+
+        self::assertSame(['-5'], $result->equals);
+        self::assertSame([], $result->notEquals);
+    }
+
+    #[Test]
+    public function emptyLikeCharsDisablesWildcardsSoAStarStaysPartOfTheTerm(): void
+    {
+        $result = (new SearchTermsParser())->parse(['pes*'], new SearchTermsConfig(likeMarkers: []));
+
+        self::assertSame(['pes*'], $result->equals);
+        self::assertSame([], $result->likes);
     }
 
     #[Test]
@@ -210,13 +289,17 @@ final class SearchTermsParserTest extends TestCase
         self::assertFalse($result->isEmpty());
     }
 
+    /**
+     * @param string[] $likeMarkers
+     * @param string[] $ignoreMarkers
+     */
     #[Test]
     #[DataProvider('invalidConfigProvider')]
-    public function configRejectsInvalidValues(string $likeChar, string $ignoreChar, int $minLength): void
+    public function configRejectsInvalidValues(array $likeMarkers, array $ignoreMarkers, int $minLength): void
     {
         $this->expectException(InvalidSearchTermsConfigException::class);
 
-        new SearchTermsConfig(minLength: $minLength, likeChar: $likeChar, ignoreChar: $ignoreChar);
+        new SearchTermsConfig(minLength: $minLength, likeMarkers: $likeMarkers, ignoreMarkers: $ignoreMarkers);
     }
 
     /**
