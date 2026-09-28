@@ -18,7 +18,7 @@ $finder = PhpCsFixer\Finder::create()
     ->ignoreVCS(true);
 
 return (new PhpCsFixer\Config())
-    ->setCacheFile(__DIR__.'/var/cache/.php-cs-fixer.cache')
+    ->setCacheFile(__DIR__.'/var/cache/.php-cs-fixer.src.cache')
     ->setRules([
         '@PER-CS2.0' => true,
         '@PER-CS2.0:risky' => true,
