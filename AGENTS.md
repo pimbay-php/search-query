@@ -14,7 +14,7 @@ License: Unlicense. Minimum PHP: 8.3.
 composer install
 composer php:cs         # php-cs-fixer, --dry-run --diff (check only, never mutates)
 composer php:cs:fix     # same, applies the fix
-composer php:stan       # phpstan analyse, level: max, bleedingEdge
+composer php:stan       # phpstan analyse, level: max — src and tests, one config each
 composer test:83        # docker compose run php83 — phpunit, no coverage
 composer test:84        # docker compose run php84 — phpunit, no coverage
 composer test:85        # docker compose run php85 — phpunit, no coverage
@@ -23,8 +23,6 @@ composer test:coverage  # docker compose run php83 — phpunit --coverage-text
 composer test:mutation # infection — mutation testing, --min-msi=100 --min-covered-msi=100
 composer ci             # php:cs + php:stan + test:all + test:mutation
 ```
-
-`php:stan` is the authoritative type-safety gate — always run alongside `php:cs`/tests.
 
 ## Code Style
 

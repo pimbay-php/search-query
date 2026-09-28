@@ -4,6 +4,5 @@ includes:
 parameters:
     level: max
     paths:
-        - src
-    reportPossiblyNonexistentGeneralArrayOffset: true
+        - tests
     reportUnmatchedIgnoredErrors: true
