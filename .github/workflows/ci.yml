@@ -28,6 +28,10 @@ jobs:
 
       - run: composer install --prefer-dist --no-progress
 
+      - name: Manifest validation
+        if: matrix.php-version == '8.3'
+        run: composer validate --strict
+
       - name: Code style check
         if: matrix.php-version == '8.3'
         run: composer php:cs
@@ -46,6 +50,10 @@ jobs:
       - name: Mutation testing
         if: matrix.php-version == '8.3'
         run: XDEBUG_MODE=coverage vendor/bin/infection --threads=max --min-msi=100 --min-covered-msi=100
+
+      - name: Dependency advisories
+        if: matrix.php-version == '8.3'
+        run: composer audit
 
   sync:
     if: github.event_name == 'push'

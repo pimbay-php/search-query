@@ -62,7 +62,10 @@
       "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php",
       "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.tests.php"
     ],
-    "php:stan": "vendor/bin/phpstan analyse",
+    "php:stan": [
+      "vendor/bin/phpstan analyse",
+      "vendor/bin/phpstan analyse -c phpstan.tests.neon.dist"
+    ],
     "test:83": "docker compose run --rm php83 sh -c 'composer install --prefer-dist --no-progress && php vendor/bin/phpunit --no-coverage'",
     "test:84": "docker compose run --rm php84 sh -c 'composer install --prefer-dist --no-progress && php vendor/bin/phpunit --no-coverage'",
     "test:85": "docker compose run --rm php85 sh -c 'composer install --prefer-dist --no-progress && php vendor/bin/phpunit --no-coverage'",

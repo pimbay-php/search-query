@@ -15,4 +15,5 @@
 /docker-compose.yml export-ignore
 /infection.json5 export-ignore
 /phpstan.neon.dist export-ignore
+/phpstan.tests.neon.dist export-ignore
 /phpunit.xml.dist export-ignore
