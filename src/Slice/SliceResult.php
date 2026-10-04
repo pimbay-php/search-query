@@ -40,4 +40,9 @@ interface SliceResult extends \IteratorAggregate
     public function getCurrentOffset(): int;
 
     public function isOutOfRange(): bool;
+
+    /**
+     * @return \Traversable<array-key, T>
+     */
+    public function getIterator(): \Traversable;
 }
