@@ -35,4 +35,9 @@ interface CursorResult extends \IteratorAggregate
     public function getNextCursor(): ?string;
 
     public function hasNextPage(): bool;
+
+    /**
+     * @return \Traversable<array-key, T>
+     */
+    public function getIterator(): \Traversable;
 }
