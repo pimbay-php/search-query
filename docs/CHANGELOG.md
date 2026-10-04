@@ -5,6 +5,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); version
 
 ## [Unreleased]
 
+### Changed
+- Iterating a `SliceResult` or `CursorResult` keeps the item type `T` in static analysis, because both interfaces now declare `getIterator()` as `\Traversable<array-key, T>`.
+
 ## [2.1.0] - 2026-09-27
 
 ### Added
